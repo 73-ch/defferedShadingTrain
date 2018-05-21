@@ -2,6 +2,8 @@
 
 #include "ofMain.h"
 
+using namespace glm;
+
 class ofApp : public ofBaseApp{
 
 	public:
@@ -26,4 +28,5 @@ class ofApp : public ofBaseApp{
     // g_pass
     ofFbo g_buffer;
     ofShader g_pass;
+    ofTexture depth_tex;
 };

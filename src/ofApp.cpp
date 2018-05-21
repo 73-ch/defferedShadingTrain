@@ -22,13 +22,17 @@ void ofApp::setup(){
     fbo_settings.maxFilter = GL_NEAREST;
     fbo_settings.wrapModeHorizontal = GL_CLAMP_TO_BORDER;
     fbo_settings.wrapModeVertical = GL_CLAMP_TO_BORDER;
-    fbo_settings.colorFormats.push_back(GL_RGB);
-    
     
     g_buffer.allocate(fbo_settings);
     
-    g_buffer.createAndAttachTexture(GL_RGBA32F, 1);
-    g_buffer.createAndAttachTexture(GL_RGBA32F, 2);
+    depth_tex = g_buffer.getDepthTexture();
+    
+    g_buffer.createAndAttachTexture(GL_RGB16F, 1); // position
+    g_buffer.createAndAttachTexture(GL_RGB, 2); // normal
+    g_buffer.createAndAttachTexture(GL_RGBA, 3); // albedo
+    g_buffer.createAndAttachTexture(GL_RGBA, 4); // albedo
+    
+    g_pass.load("g_pass_vertex.glsl", "g_pass_fragment.glsl");
 
 }
 
@@ -39,12 +43,33 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+    float time = ofGetElapsedTimef();
+    
+    // g_pass
     g_buffer.begin();
+    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     g_buffer.activateAllDrawBuffers();
+    g_pass.begin();
+    cam.begin();
+    
+    ofDrawBox(0, 0, 0, 200, 200, 200);
     
     
+    cam.end();
+    g_pass.end();
     g_buffer.end();
-
+    
+    // g_pass end
+    
+    
+    // fboのそれぞれのテクスチャに書き込めているかのテスト
+    
+    const float test_width = ofGetWidth()/4.,test_height = ofGetHeight()/4.;
+    ofSetColor(255);
+    g_buffer.getTexture(0).draw(vec2(0,0), test_width, test_height);
+    g_buffer.getTexture(1).draw(vec2(test_width,test_height), test_width, test_height);
+    g_buffer.getTexture(2).draw(vec2(test_width*2,test_height*2), test_width, test_height);
+    g_buffer.getTexture(3).draw(vec2(test_width*3,test_height*3), test_width, test_height);
 }
 
 //--------------------------------------------------------------
