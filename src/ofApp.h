@@ -27,6 +27,16 @@ class ofApp : public ofBaseApp{
     
     // g_pass
     ofFbo g_buffer;
-    ofShader g_pass;
+    ofShader g_pass_shader;
     ofTexture depth_tex;
+    
+    // l_pass
+    ofShader l_pass_shader;
+    
+    vector <vec3> l_positions;
+    vector <vec3> l_ambients;
+    vector <vec3> l_diffuses;
+    vector <vec3> l_speculars;
+    
+    ofMesh rect;
 };

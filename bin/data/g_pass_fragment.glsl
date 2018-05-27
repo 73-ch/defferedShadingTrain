@@ -1,8 +1,8 @@
 #version 330 core
 
-in vec3 Position;
-in vec3 Normal;
-in vec2 TexCoord;
+in vec3 v_position;
+in vec3 v_normal;
+in vec2 v_texcoord;
 
 layout (location = 0) out vec4 gPosition;
 layout (location = 1) out vec4 gNormal;
@@ -44,14 +44,14 @@ float LinearizeDepth(float depth)
 
 void main()
 {
-//    vec3 NormalTexel =  texture(normal, TexCoord).rgb;
-//    mat3 tanM = cotangent_frame(Normal, Position, TexCoord);
+//    vec3 NormalTexel =  texture(normal, v_texcoord).rgb;
+//    mat3 tanM = cotangent_frame(Normal, Position, v_texcoord);
 //    NormalTexel = normalize(tanM * NormalTexel);
     
     float depth = LinearizeDepth(gl_FragCoord.z);
     
-    gPosition = vec4(Position, 1.0);
-    gNormal = vec4(Normal, 1.0);
+    gPosition = vec4(v_position, 1.0);
+    gNormal = vec4(v_normal, 1.0);
     gAlbedo = vec4(1.0);
     gDepth = vec4(depth, depth, depth, 1.0);
 }
